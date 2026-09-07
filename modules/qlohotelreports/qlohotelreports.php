@@ -168,7 +168,7 @@ class QloHotelReports extends Module
                 . ($idProduct ? '&id_product=' . $idProduct : '');
 
             $this->context->smarty->assign(array(
-                'room_types'             => HotelRoomInformation::getRoomTypes(array(
+                'room_types'             => HotelRoomType::getRoomTypes(array(
                     'id_hotel' => $idHotel,
                     'id_lang'  => $idLang,
                 )),
@@ -361,7 +361,7 @@ class QloHotelReports extends Module
                 'filter_revenue_source'     => $revenueSource,
                 'tax_names'                 => Tax::getTaxes($idLang),
                 'refund_states'             => OrderReturnState::getOrderReturnStates($idLang),
-                'room_types'                => HotelRoomInformation::getRoomTypes(array(
+                'room_types'                => HotelRoomType::getRoomTypes(array(
                     'id_hotel' => $idHotel,
                     'id_lang'  => $idLang,
                 )),
@@ -550,7 +550,7 @@ class QloHotelReports extends Module
                     'id_hotel'   => $idHotel,
                     'id_product' => $idProduct,
                 )),
-                'room_types'            => HotelRoomInformation::getRoomTypes(array(
+                'room_types'            => HotelRoomType::getRoomTypes(array(
                     'id_hotel' => $idHotel,
                     'id_lang'  => $idLang,
                 )),
@@ -838,7 +838,7 @@ class QloHotelReports extends Module
                     'id_hotel'   => $idHotel,
                     'id_product' => $idProduct,
                 )),
-                'room_types'           => HotelRoomInformation::getRoomTypes(array(
+                'room_types'           => HotelRoomType::getRoomTypes(array(
                     'id_hotel' => $idHotel,
                     'id_lang'  => $idLang,
                 )),

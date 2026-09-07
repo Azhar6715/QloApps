@@ -333,29 +333,6 @@ class HotelRoomInformation extends ObjectModel
     // ── REPORT METHODS ────────────────────────────────────────────────────────
 
     /**
-     * Room type list for filter dropdowns in reports.
-     *
-     * @param array $params id_hotel, id_lang
-     * @return array rows: id_product, room_type_name
-     */
-    public static function getRoomTypes(array $params)
-    {
-        $idsHotel = isset($params['ids_hotel']) ? $params['ids_hotel'] : (isset($params['id_hotel']) ? $params['id_hotel'] : false);
-        $idLang  = !empty($params['id_lang']) ? (int) $params['id_lang'] : (int) Context::getContext()->language->id;
-
-        return Db::getInstance()->executeS(
-            'SELECT DISTINCT hri.`id_product`, pl.`name` AS room_type_name
-            FROM `'._DB_PREFIX_.'htl_room_information` hri
-            INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = hri.`id_product`)
-            INNER JOIN `'._DB_PREFIX_.'product_lang` pl
-                ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.$idLang.')
-            WHERE p.`active` = 1 AND p.`booking_product` = 1'
-            . HotelBranchInformation::addHotelRestriction($idsHotel, 'hri')
-            . ' ORDER BY pl.`name`'
-        );
-    }
-
-    /**
      * Room-type × date grid showing total / booked / available / OOO per row.
      * Used by availability report tab.
      *

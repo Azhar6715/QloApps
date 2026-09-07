@@ -465,6 +465,30 @@ class HotelRoomType extends ObjectModel
      * @param array $params date_from, date_to, id_hotel, id_product, id_lang
      * @return array
      */
+
+    /**
+     * Room type list for filter dropdowns in reports.
+     *
+     * @param array $params id_hotel, id_lang
+     * @return array rows: id_product, room_type_name
+     */
+    public static function getRoomTypes(array $params)
+    {
+        $idsHotel = isset($params['ids_hotel']) ? $params['ids_hotel'] : (isset($params['id_hotel']) ? $params['id_hotel'] : false);
+        $idLang   = !empty($params['id_lang']) ? (int) $params['id_lang'] : (int) Context::getContext()->language->id;
+
+        return Db::getInstance()->executeS(
+            'SELECT hrt.`id_product`, pl.`name` AS room_type_name
+            FROM `'._DB_PREFIX_.'htl_room_type` hrt
+            INNER JOIN `'._DB_PREFIX_.'product` p
+                ON (p.`id_product` = hrt.`id_product` AND p.`active` = 1 AND p.`booking_product` = 1)
+            INNER JOIN `'._DB_PREFIX_.'product_lang` pl
+                ON (pl.`id_product` = hrt.`id_product` AND pl.`id_lang` = '.$idLang.')'
+            . HotelBranchInformation::addHotelRestriction($idsHotel, 'hrt')
+            . ' ORDER BY pl.`name`'
+        );
+    }
+
     public static function getRoomTypePerformance(array $params)
     {
         $dateFrom  = pSQL($params['date_from']);
