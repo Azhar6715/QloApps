@@ -766,7 +766,11 @@
 		$('#total_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_tax_without_discount), currency_format, currency_sign, currency_blank));
 		$('#total_with_taxes').html(formatCurrency(parseFloat(jsonSummary.summary.total_price), currency_format, currency_sign, currency_blank));
 
-		$('#payment_amount').val(jsonSummary.summary.total_price);
+		if (parseInt($('input[name="is_full_payment"]:checked').val())) {
+			$('#payment_amount').val(jsonSummary.summary.total_price);
+		}
+		$('#full_payment_amount_value').html(formatCurrency(parseFloat(jsonSummary.summary.total_price), currency_format, currency_sign, currency_blank));
+
 		if (jsonSummary.summary.is_advance_payment_active) {
 			$('#advance_payment_amount').html(formatCurrency(parseFloat(jsonSummary.summary.advance_payment_amount_with_tax), currency_format, currency_sign, currency_blank));
 			$('#advance_payment_amount_block').show();
@@ -778,7 +782,8 @@
 		if (jsonSummary.summary.total_price == 0) { // if free order
 			$('#send_email_to_customer, [name="is_full_payment"], #payment_amount, #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').hide(200);
 		} else {
-			$('#send_email_to_customer, [name="is_full_payment"], #payment_amount, #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
+			$('#send_email_to_customer, [name="is_full_payment"], #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
+			$('#payment_amount').closest('.form-group').toggle(!parseInt($('input[name="is_full_payment"]:checked').val()));
 		}
 	}
 
@@ -1297,7 +1302,11 @@
 		}
 		$('#order_message').val(jsonSummary.order_message);
 		$('#payment_amount').siblings('.input-group-addon').html(currency_sign);
-		$('#payment_amount').val(jsonSummary.summary.total_price);
+		if (parseInt($('input[name="is_full_payment"]:checked').val())) {
+			$('#payment_amount').val(jsonSummary.summary.total_price);
+		}
+		$('#full_payment_amount_value').html(formatCurrency(parseFloat(jsonSummary.summary.total_price), currency_format, currency_sign, currency_blank));
+
 		if (jsonSummary.summary.is_advance_payment_active) {
 			$('#advance_payment_amount').html(formatCurrency(parseFloat(jsonSummary.summary.advance_payment_amount_with_tax), currency_format, currency_sign, currency_blank));
 			$('#advance_payment_amount_block').show();
@@ -1309,7 +1318,8 @@
 		if (jsonSummary.summary.total_price == 0) { // if free order
 			$('#send_email_to_customer, [name="is_full_payment"], #payment_amount, #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').hide(200);
 		} else {
-			$('#send_email_to_customer, [name="is_full_payment"], #payment_amount, #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
+			$('#send_email_to_customer, [name="is_full_payment"], #payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
+			$('#payment_amount').closest('.form-group').toggle(!parseInt($('input[name="is_full_payment"]:checked').val()));
 		}
 
 		resetBind();
@@ -1562,10 +1572,10 @@
 		});
 	}
 
-	{* JS for handling extra demands changes *}
+	{* JS for handling extra services changes *}
 	$(document).ready(function() {
-		// modalbox for extra demands
-		$('body').on('click', '.open_rooms_extra_demands', function() {
+		// modalbox for extra services
+		$('body').on('click', '.open_rooms_extra_services', function() {
 			var idProduct = $(this).attr('id_product');
 			var idCart = $(this).attr('id_cart');
 			var idRoom = $(this).attr('id_room');
@@ -1590,7 +1600,7 @@
 					id_product: idProduct,
 					id_customer: id_customer,
 					id_hotel_cart_booking: idHotelCartBooking,
-					action: 'getRoomTypeCartDemands',
+					action: 'getRoomTypeCartServices',
 					ajax: true
 				},
 				success: function(response) {
@@ -1603,10 +1613,8 @@
                         errorHtml += '</ol>';
                         showErrorMessage(errorHtml);
                     } else {
-                        $('#customer_cart_details').after(response.html_exta_demands);
-						// $('#rooms_type_extra_demands').find('#room_type_demands_desc').html('');
-						// $('#rooms_type_extra_demands').find('#room_type_demands_desc').append(response.html_exta_demands);
-						$('#rooms_type_extra_demands').modal('show');
+						$('#customer_cart_details').after(response.html_exta_services);
+						$('#rooms_type_extra_services').modal('show');
                     }
 				},
                 complete: function() {
@@ -1614,96 +1622,9 @@
                 }
 			});
 		});
-		$(document).on('hidden.bs.modal', '#rooms_type_extra_demands', function (e) {
+		$(document).on('hidden.bs.modal', '#rooms_type_extra_services', function (e) {
 			// reload to make changes reflect everywhere
 			location.reload();
-		});
-
-		// select/unselect extra demand
-		$(document).on('click', '.id_room_type_demand', function() {
-			var roomDemands = [];
-			// get the selected extra demands by customer
-			$(this).closest('.room_demand_detail').find('input:checkbox.id_room_type_demand:checked').each(function () {
-				roomDemands.push({
-					'id_global_demand':$(this).val(),
-					'id_option': $(this).closest('.room_demand_block').find('.id_option').val()
-				});
-			});
-			var idBookingCart = $(this).attr('id_cart_booking');
-            $(".loading_overlay").show();
-			$.ajax({
-				type: 'POST',
-				dataType: 'JSON',
-				headers: {
-					"cache-control": "no-cache"
-				},
-				url: "{$link->getAdminLink('AdminCarts')|addslashes}",
-				dataType: 'JSON',
-				cache: false,
-				data: {
-					id_cart_booking: idBookingCart,
-					room_demands: JSON.stringify(roomDemands),
-					action: 'changeRoomDemands',
-					ajax: true
-				},
-				success: function(response) {
-					if (response.status) {
-						showSuccessMessage(txtExtraDemandSucc);
-					} else {
-						showErrorMessage(txtExtraDemandErr);
-					}
-				},
-                complete: function() {
-                    $(".loading_overlay").hide();
-                }
-			});
-		});
-
-		// change advanced option of extra demand
-		$(document).on('change', '.demand_adv_option_block .id_option', function(e) {
-			var option_selected = $(this).find('option:selected');
-			var extra_demand_price = option_selected.attr("optionPrice")
-			extra_demand_price = parseFloat(extra_demand_price);
-			extra_demand_price = formatCurrency(extra_demand_price, currency_format, currency_sign, currency_blank);
-			$(this).closest('.room_demand_block').find('.extra_demand_option_price').text(extra_demand_price);
-			var roomDemands = [];
-			if ($(this).closest('.room_demand_block').find('input:checkbox.id_room_type_demand').is(':checked')) {
-				// get the selected extra demands by customer
-				$(this).closest('.room_demand_detail').find('input:checkbox.id_room_type_demand:checked').each(function () {
-					roomDemands.push({
-						'id_global_demand':$(this).val(),
-						'id_option': $(this).closest('.room_demand_block').find('.id_option').val()
-					});
-				});
-				var idBookingCart = $(this).closest('.room_demand_block').find('.id_room_type_demand').attr('id_cart_booking');
-                $(".loading_overlay").show();
-				$.ajax({
-					type: 'POST',
-					dataType: 'JSON',
-					headers: {
-						"cache-control": "no-cache"
-					},
-					url: "{$link->getAdminLink('AdminCarts')|addslashes}",
-					dataType: 'JSON',
-					cache: false,
-					data: {
-						id_cart_booking: idBookingCart,
-						room_demands: JSON.stringify(roomDemands),
-						action: 'changeRoomDemands',
-						ajax: true
-					},
-					success: function(response) {
-						if (response.status) {
-							showSuccessMessage(txtExtraDemandSucc);
-						} else {
-							showErrorMessage(txtExtraDemandErr);
-						}
-					},
-                    complete: function() {
-                        $(".loading_overlay").hide();
-                    }
-				});
-			}
 		});
 
 		$(document).on('keyup', '#payment_module_name', function() {
@@ -1729,11 +1650,13 @@
 
 		$(document).on('change', 'input[name="is_full_payment"]', function() {
 			if (parseInt($('input[name="is_full_payment"]:checked').val())) {
-				$('#payment_amount').attr('disabled', true);
+				$('#payment_amount').val({$order_total|floatval}).attr('disabled', true);
+				$('#payment_amount').closest('.form-group').hide(200);
 
-				$('#payment_type, #payment_transaction_id').closest('.form-group').show(200);
+				$('#payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
 			} else {
-				$('#payment_amount').attr('disabled', false);
+				$('#payment_amount').val({$order_total|floatval}).attr('disabled', false);
+				$('#payment_amount').closest('.form-group').show(200);
 
 				managePaymentOptions();
 			}
@@ -1747,9 +1670,9 @@
 			let paymentAmount = parseFloat($('#payment_amount').val().trim());
 
 			if (paymentAmount != 0) {
-				$('#payment_type, #payment_transaction_id').closest('.form-group').show(200);
+				$('#payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').show(200);
 			} else {
-				$('#payment_type, #payment_transaction_id').closest('.form-group').hide(200);
+				$('#payment_type, #payment_module_name, #payment_transaction_id').closest('.form-group').hide(200);
 			}
 		}
 
@@ -1764,7 +1687,7 @@
 			}
 		});
 
-        // click on back button on created facilities while additional facilities edit
+         // click on back button on created extra service edit
         $(document).on('click', '#back_to_service_btn', function() {
             $('#room_type_services_desc').show();
             $('#add_new_room_services_block').hide();
@@ -1818,7 +1741,7 @@
 						if (jsonData.service_panel) {
 							$('#room_type_service_product_desc').replaceWith(jsonData.service_panel);
 						}
-						showSuccessMessage(txtExtraDemandSucc);
+						showSuccessMessage(txtExtraServiceSucc);
 					} else {
 						var errorHtml = error_found_txt + ':<br>';
 						errorHtml += '<ol>';
@@ -1866,7 +1789,7 @@
                         if (jsonData.service_panel) {
                             $('#room_type_service_product_desc').replaceWith(jsonData.service_panel);
                         }
-                        showSuccessMessage(txtExtraDemandSucc);
+                        showSuccessMessage(txtExtraServiceSucc);
                     } else {
                         if (jsonData.errors != 'undefined' && jsonData.errors.length) {
                             var errorHtml = error_found_txt + ':<br>';
@@ -2399,8 +2322,13 @@
 							<p class="help-block">{l s='If disabled, no mail related to this order will be sent during order creation.'}</p>
 						</div>
 					</div>
-                    <div class="form-group" {if $order_total <= 0}style="display: none;"{/if}>
-                        <label class="control-label col-lg-3">{l s="Full payment"}</label>
+                     <div class="form-group" {if $order_total <= 0}style="display: none;"{/if}>
+                        <label class="control-label col-lg-3">
+                            <span class="label-tooltip" data-toggle="tooltip"
+                            title="{l s='Keep this option enabled for full payment and disable it to take partial payment of the booking.'}">
+                                {l s="Full payment"}
+                            </span>
+                        </label>
                         <div class="col-lg-9">
                             <span class="switch prestashop-switch fixed-width-lg">
                                 <input type="radio" name="is_full_payment" id="is_full_payment_on" value="1" {if $is_full_payment}checked="checked"{/if}>
@@ -2409,20 +2337,44 @@
                                 <label for="is_full_payment_off">{l s="No"}</label>
                                 <a class="slide-button btn"></a>
                             </span>
-                            <p class="help-block">{l s='Keep this option enabled for full payment and disable it to take partial payment of the booking.'}</p>
+                            <p class="help-block">
+                                <span>{l s='Total amount: '}</span>
+                                <span id="full_payment_amount_value">{displayPrice price=$order_total currency=$currency->id}</span>
+                            </p>
                         </div>
                     </div>
-                    <div class="form-group" {if $order_total <= 0}style="display: none;"{/if}>
+                    <div class="form-group" {if $order_total <= 0 || $is_full_payment}style="display: none;"{/if}>
                         <label class="control-label required col-lg-3">{l s='Payment amount'}</label>
                         <div class="col-lg-9">
                             <div class="input-group fixed-width-xxl">
                                 <span class="input-group-addon">{$currency->sign}</span>
-                                <input type="text" name="payment_amount" id="payment_amount" value="{if isset($smarty.post.payment_amount)}{$smarty.post.payment_amount|escape:'html':'UTF-8'}{elseif $is_full_payment}{$order_total}{/if}" {if $is_full_payment}disabled{/if} />
+                                <input type="text" name="payment_amount" id="payment_amount" value="{if !$is_full_payment && isset($smarty.post.payment_amount)}{$smarty.post.payment_amount|escape:'html':'UTF-8'}{else}{$order_total}{/if}" {if $is_full_payment}disabled{/if} />
                             </div>
                             <p class="help-block" id="advance_payment_amount_block" {if isset($is_advance_payment_active) && $is_advance_payment_active}style="display: block;"{else}style="display: none;"{/if}>
                                 <span>{l s='Advance payment amount: '}</span>
                                 <span id="advance_payment_amount">{displayPrice price=$advance_payment_amount_with_tax currency=$currency->id}</span>
                             </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-3">{l s='Booking Source'}</label>
+                        <div class="col-lg-9">
+                            <select class="fixed-width-xxl" name="id_booking_source" id="id_booking_source">
+                                <option value="">{l s='-- Select Booking Source --'}</option>
+                                {assign var="prev_business_source" value=""}
+                                {foreach from=$booking_sources item=booking_source name=booking_sources_loop}
+                                    {if $booking_source.business_source_name != $prev_business_source}
+                                        {if !$smarty.foreach.booking_sources_loop.first}</optgroup>{/if}
+                                        <optgroup label="{$booking_source.business_source_name}">
+                                        {assign var="prev_business_source" value=$booking_source.business_source_name}
+                                    {/if}
+                                    <option value="{$booking_source.id_source}" {if (isset($smarty.post.id_booking_source) && $booking_source.id_source == $smarty.post.id_booking_source) || (!isset($smarty.post.id_booking_source) && $booking_source.code == 'WALKIN')}selected="selected"{/if}>
+                                        {$booking_source.name}
+                                    </option>
+                                {/foreach}
+                                {if $booking_sources}</optgroup>{/if}
+                            </select>
+                            <p class="help-block">{l s='Walk-in is selected by default. Change it if this booking came from a different source.'}</p>
                         </div>
                     </div>
                     <div class="form-group" {if $order_total <= 0}style="display: none;"{/if}>
@@ -2487,6 +2439,7 @@
 	{addJsDefL name='no_children_allowed_txt'}{l s='Only adults can be accommodated' js=1}{/addJsDefL}
 	{addJsDefL name='invalid_occupancy_txt'}{l s='Invalid occupancy(adults/children) found.' js=1}{/addJsDefL}
     {addJsDefL name='error_found_txt'}{l s='Errors found' js=1}{/addJsDefL}
+    {addJsDefL name='txtExtraServiceSucc'}{l s='Updated Successfully' js=1}{/addJsDefL}
 {/strip}
 
 <div id="loader_container">

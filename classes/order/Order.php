@@ -271,6 +271,7 @@ class OrderCore extends ObjectModel
             'invoice_date' =>                array('type' => self::TYPE_DATE),
             'delivery_date' =>                array('type' => self::TYPE_DATE),
             'source' =>                        array('type' => self::TYPE_STRING),
+            'id_source' =>                    array('type' => self::TYPE_INT),
             'valid' =>                        array('type' => self::TYPE_BOOL),
             'reference' =>                    array('type' => self::TYPE_STRING),
             'is_advance_payment' =>         array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'default' => 0),
@@ -3157,15 +3158,11 @@ class OrderCore extends ObjectModel
             $totalRoomsAndServices = $this->getTotalProductsWithoutTaxes();
         }
 
-        // Get total of extra demands
-        $objBookingDemand = new HotelBookingDemands();
-        $totalExtraDemands = $objBookingDemand->getRoomTypeBookingExtraDemands($this->id, 0, 0, 0, 0, 0, 1, $useTax);
-
         // Get cart rules total
         $orderTotalDiscount = $this->getCartRulesTotal($useTax);
 
         // Update order with new amounts after removing cart rule
-        $totalOrder = ($totalExtraDemands + $totalRoomsAndServices) - $orderTotalDiscount;
+        $totalOrder = $totalRoomsAndServices - $orderTotalDiscount;
         $totalOrder = $totalOrder > 0 ? $totalOrder : 0;
 
         return $totalOrder;
