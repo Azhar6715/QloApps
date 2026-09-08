@@ -664,7 +664,8 @@ class FrontControllerCore extends Controller
      */
     public function initCursedPage()
     {
-        header('HTTP/1.1 403 Forbidden');
+        header('HTTP/1.1 404 Not Found');
+        header('Status: 404 Not Found');
 
         $this->setMedia();
         $this->initHeader();
@@ -689,8 +690,10 @@ class FrontControllerCore extends Controller
             'display_footer' => $this->display_footer,
         ));
 
+        $this->context->smarty->assign('page_name', 'pagenotfound');
+
         $front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
-        $template = $this->context->smarty->fetch($front_controller->getTemplatePath($this->getThemeDir().'access-denied.tpl'));
+        $template = $this->context->smarty->fetch($front_controller->getTemplatePath($this->getThemeDir().'404.tpl'));
         $this->context->smarty->assign('template', $template);
         $this->layout = $this->getLayout();
     }
