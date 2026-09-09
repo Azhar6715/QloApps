@@ -29,7 +29,6 @@
     <input type="hidden" name="tab" value="{$active_report|escape:'html':'UTF-8'}">
     {if isset($smarty.get.token)}<input type="hidden" name="token" value="{$smarty.get.token|escape:'html':'UTF-8'}">{/if}
     <div class="list_filters">
-        {if $hotels|count > 1}
         <div class="row">
             <label class="col-xs-3">{l s='Hotel' mod='qlohotelreports'}</label>
             <div class="col-xs-9">
@@ -41,7 +40,6 @@
                 </select>
             </div>
         </div>
-        {/if}
         {if $active_report == 'guest-directory'}
         <div class="row">
             <label class="col-xs-3">{l s='Guest Type' mod='qlohotelreports'}</label>
@@ -123,7 +121,7 @@
                     <tr>
                         <td>{$serviceRow.date_add|date_format:'%Y-%m-%d'}</td>
                         <td>{$serviceRow.reference|escape:'html':'UTF-8'}</td>
-                        <td>{$serviceRow.customer_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$customer_link}&id_customer={$serviceRow.id_customer|intval}&updatecustomer" target="_blank">{$serviceRow.customer_name|escape:'html':'UTF-8'}</a></td>
                         <td>{$serviceRow.room_num|escape:'html':'UTF-8'}</td>
                         <td>{$serviceRow.service_name|escape:'html':'UTF-8'}</td>
                         <td>{if $serviceRow.service_category}{$serviceRow.service_category|escape:'html':'UTF-8'}{else}&mdash;{/if}</td>
@@ -195,7 +193,7 @@
                     {foreach $guests as $guest}
                     <tr>
                         <td>{$guest.id_customer|intval}</td>
-                        <td>{$guest.customer_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$customer_link}&id_customer={$guest.id_customer|intval}&updatecustomer" target="_blank">{$guest.customer_name|escape:'html':'UTF-8'}</a></td>
                         <td>{$guest.email|escape:'html':'UTF-8'}</td>
                         <td>{if $guest.phone}{$guest.phone|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                         <td>{if $guest.country}{$guest.country|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>

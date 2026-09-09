@@ -444,9 +444,11 @@ class HotelRoomInformation extends ObjectModel
                  THEN '.(int) self::STATUS_ACTIVE.'
                  ELSE hri.`id_status`
             END AS id_status,
+            hri.`id_product`, hri.`id_hotel`,
             pl.`name` AS room_type_name, hbil.`hotel_name`,
             bkgs.`id_order`, bkgs.`date_from`, bkgs.`date_to`,
             bkgs.`id_status` AS booking_status,
+            c.`id_customer`,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS guest_name'
             .($housekeepingInstalled ? ', hri.`id_housekeeping_status`' : '').'
             FROM `'._DB_PREFIX_.'htl_room_information` hri

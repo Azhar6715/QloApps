@@ -3202,7 +3202,7 @@ class OrderCore extends ObjectModel
             : '';
 
         return Db::getInstance()->executeS(
-            'SELECT o.`id_order`, o.`reference`,
+            'SELECT o.`id_order`, o.`reference`, o.`id_customer`,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS customer_name,
             c.`email`, a.`phone`,
             o.`total_paid_tax_incl` / o.`conversion_rate` AS total_charges,

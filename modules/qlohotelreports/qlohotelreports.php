@@ -155,6 +155,11 @@ class QloHotelReports extends Module
             'id_currency'    => $currency->id,
             'group_tpl_path' => _PS_MODULE_DIR_ . $this->name . '/views/templates/hook/'
                 . self::$reports[$report]['tpl'],
+            'order_link'     => $this->context->link->getAdminLink('AdminOrders'),
+            'customer_link'  => $this->context->link->getAdminLink('AdminCustomers'),
+            'hotel_link'     => $this->context->link->getAdminLink('AdminAddHotel'),
+            'room_type_link' => $this->context->link->getAdminLink('AdminProducts'),
+            'service_link'   => $this->context->link->getAdminLink('AdminNormalProducts'),
         ));
 
         if (in_array($report, array('reservation', 'arrivals', 'in-house', 'departures', 'cancellation'))) {
@@ -900,6 +905,7 @@ class QloHotelReports extends Module
                     $extraRev    = ServiceProductOrderDetail::getTotalRevenue($hotelParams);
                     $obRows      = Order::getOutstandingBalance($hotelParams);
                     $hotelRows[] = array(
+                        'id_hotel'            => $hotelId,
                         'hotel_name'          => $hotel['hotel_name'],
                         'total_rooms'         => AdminStatsController::getTotalRooms($hotelId, 1),
                         'rooms_sold'          => $roomNights,

@@ -31,7 +31,6 @@
         <input type="hidden" name="tab" value="{$active_report|escape:'html':'UTF-8'}">
         {if isset($smarty.get.token)}<input type="hidden" name="token" value="{$smarty.get.token|escape:'html':'UTF-8'}">{/if}
         <div class="list_filters">
-            {if $hotels|count > 1}
             <div class="row">
                 <label class="col-xs-3">{l s='Hotel' mod='qlohotelreports'}</label>
                 <div class="col-xs-9">
@@ -43,7 +42,6 @@
                     </select>
                 </div>
             </div>
-            {/if}
             <div class="row">
                 <label class="col-xs-3">{l s='Room Type' mod='qlohotelreports'}</label>
                 <div class="col-xs-9">
@@ -137,12 +135,12 @@
                     {if $reservations}
                         {foreach $reservations as $reservation}
                             <tr>
-                                <td>{$reservation.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$room_type_link}&id_product={$reservation.id_product|intval}&updateproduct" target="_blank">{$reservation.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$reservation.room_num|escape:'html':'UTF-8'}</td>
                                 <td>{$reservation.hotel_check_in|escape:'html':'UTF-8'}</td>
                                 <td>{$reservation.hotel_check_out|escape:'html':'UTF-8'}</td>
-                                <td>{$reservation.id_order|intval}</td>
-                                <td>{$reservation.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$reservation.id_order|intval}&vieworder" target="_blank">{$reservation.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$reservation.id_customer|intval}&updatecustomer" target="_blank">{$reservation.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{if $reservation.phone}{$reservation.phone|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td class="text-right">{$reservation.nights|intval}</td>
                                 <td class="text-right">{$reservation.adults|intval}</td>
@@ -218,11 +216,11 @@
                     {if $cancellations}
                         {foreach $cancellations as $cancellation}
                             <tr>
-                                <td>{$cancellation.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$room_type_link}&id_product={$cancellation.id_product|intval}&updateproduct" target="_blank">{$cancellation.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$cancellation.room_num|escape:'html':'UTF-8'}</td>
                                 <td>{$cancellation.hotel_check_in|escape:'html':'UTF-8'}</td>
-                                <td>{$cancellation.id_order|intval}</td>
-                                <td>{$cancellation.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$cancellation.id_order|intval}&vieworder" target="_blank">{$cancellation.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$cancellation.id_customer|intval}&updatecustomer" target="_blank">{$cancellation.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{if $cancellation.cancellation_date}{$cancellation.cancellation_date|date_format:'%d-%m-%Y'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td>{if $cancellation.cancellation_reason}{$cancellation.cancellation_reason|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td class="text-right">{displayPrice price=$cancellation.refunded_amount currency=$cancellation.id_currency}</td>
@@ -281,13 +279,13 @@
                     {if $arrivals}
                         {foreach $arrivals as $arrival}
                             <tr>
-                                <td>{$arrival.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$room_type_link}&id_product={$arrival.id_product|intval}&updateproduct" target="_blank">{$arrival.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$arrival.room_num|escape:'html':'UTF-8'}</td>
                                 <td>{$arrival.actual_checkin|escape:'html':'UTF-8'}</td>
                                 <td>{$arrival.actual_checkout|escape:'html':'UTF-8'}</td>
-                                <td>{$arrival.id_order|intval}</td>
-                                <td>{$arrival.customer_name|escape:'html':'UTF-8'}</td>
-                                <td>{$arrival.hotel_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$arrival.id_order|intval}&vieworder" target="_blank">{$arrival.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$arrival.id_customer|intval}&updatecustomer" target="_blank">{$arrival.customer_name|escape:'html':'UTF-8'}</a></td>
+                                <td><a href="{$hotel_link}&id={$arrival.id_hotel|intval}&updatehtl_branch_info" target="_blank">{$arrival.hotel_name|escape:'html':'UTF-8'}</a></td>
                                 <td class="text-right">{$arrival.los|intval}</td>
                                 <td class="text-right">{$arrival.adults|intval}</td>
                                 <td class="text-right">{$arrival.children|intval}</td>
@@ -347,13 +345,13 @@
                     {if $departures}
                         {foreach $departures as $departure}
                             <tr>
-                                <td>{$departure.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$room_type_link}&id_product={$departure.id_product|intval}&updateproduct" target="_blank">{$departure.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$departure.room_num|escape:'html':'UTF-8'}</td>
                                 <td>{$departure.actual_checkin|escape:'html':'UTF-8'}</td>
                                 <td>{$departure.actual_checkout|escape:'html':'UTF-8'}</td>
-                                <td>{$departure.id_order|intval}</td>
-                                <td>{$departure.customer_name|escape:'html':'UTF-8'}</td>
-                                <td>{$departure.hotel_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$departure.id_order|intval}&vieworder" target="_blank">{$departure.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$departure.id_customer|intval}&updatecustomer" target="_blank">{$departure.customer_name|escape:'html':'UTF-8'}</a></td>
+                                <td><a href="{$hotel_link}&id={$departure.id_hotel|intval}&updatehtl_branch_info" target="_blank">{$departure.hotel_name|escape:'html':'UTF-8'}</a></td>
                                 <td class="text-right">{$departure.los|intval}</td>
                                 <td class="text-right">{$departure.adults|intval}</td>
                                 <td class="text-right">{$departure.children|intval}</td>
@@ -416,13 +414,13 @@
                     {if $in_house}
                         {foreach $in_house as $inHouseGuest}
                             <tr>
-                                <td>{$inHouseGuest.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$room_type_link}&id_product={$inHouseGuest.id_product|intval}&updateproduct" target="_blank">{$inHouseGuest.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$inHouseGuest.room_num|escape:'html':'UTF-8'}</td>
                                 <td>{$inHouseGuest.actual_checkin|escape:'html':'UTF-8'}</td>
                                 <td>{$inHouseGuest.actual_checkout|escape:'html':'UTF-8'}</td>
-                                <td>{$inHouseGuest.id_order|intval}</td>
-                                <td>{$inHouseGuest.customer_name|escape:'html':'UTF-8'}</td>
-                                <td>{$inHouseGuest.hotel_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$inHouseGuest.id_order|intval}&vieworder" target="_blank">{$inHouseGuest.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$inHouseGuest.id_customer|intval}&updatecustomer" target="_blank">{$inHouseGuest.customer_name|escape:'html':'UTF-8'}</a></td>
+                                <td><a href="{$hotel_link}&id={$inHouseGuest.id_hotel|intval}&updatehtl_branch_info" target="_blank">{$inHouseGuest.hotel_name|escape:'html':'UTF-8'}</a></td>
                                 <td class="text-right">{$inHouseGuest.los|intval}</td>
                                 <td class="text-right">{$inHouseGuest.adults|intval}</td>
                                 <td class="text-right">{$inHouseGuest.children|intval}</td>

@@ -178,7 +178,7 @@ class OrderPaymentCore extends ObjectModel
         $paymentMethod = isset($params['payment_method']) ? pSQL($params['payment_method']) : '';
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT op.`id_order_payment`, op.`date_add`, o.`id_order`,
+            'SELECT op.`id_order_payment`, op.`date_add`, o.`id_order`, o.`id_customer`,
             op.`order_reference` AS reference,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS customer_name,
             op.`payment_method`, op.`payment_type`, op.`amount`, op.`conversion_rate`,

@@ -29,7 +29,6 @@
     <input type="hidden" name="tab" value="{$active_report|escape:'html':'UTF-8'}">
     {if isset($smarty.get.token)}<input type="hidden" name="token" value="{$smarty.get.token|escape:'html':'UTF-8'}">{/if}
     <div class="list_filters">
-        {if $hotels|count > 1}
         <div class="row">
             <label class="col-xs-3">{l s='Hotel' mod='qlohotelreports'}</label>
             <div class="col-xs-9">
@@ -41,8 +40,6 @@
                 </select>
             </div>
         </div>
-        {/if}
-        {if $room_types}
         <div class="row">
             <label class="col-xs-3">{l s='Room Type' mod='qlohotelreports'}</label>
             <div class="col-xs-9">
@@ -56,7 +53,6 @@
                 </select>
             </div>
         </div>
-        {/if}
         <div class="actions">
             <hr>
             <span class="pull-right">
@@ -177,7 +173,7 @@
                         {assign var="date_avail" value=$date_avail+$availabilityRow.available}
                     <tr>
                         <td>{$availabilityRow.date|escape:'html':'UTF-8'}</td>
-                        <td>{$availabilityRow.room_type_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$room_type_link}&id_product={$availabilityRow.id_product|intval}&updateproduct" target="_blank">{$availabilityRow.room_type_name|escape:'html':'UTF-8'}</a></td>
                         <td class="text-center">{$availabilityRow.total_rooms|intval}</td>
                         <td class="text-center">{$availabilityRow.rooms_booked|intval}</td>
                         <td class="text-center">{$availabilityRow.out_of_order|intval}</td>
@@ -272,7 +268,7 @@
                     {foreach $rooms as $room}
                     <tr>
                         <td>{$room.room_num|escape:'html':'UTF-8'}</td>
-                        <td>{$room.room_type_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$room_type_link}&id_product={$room.id_product|intval}&updateproduct" target="_blank">{$room.room_type_name|escape:'html':'UTF-8'}</a></td>
                         <td>{if $room.floor}{$room.floor|escape:'html':'UTF-8'}{else}&mdash;{/if}</td>
                         <td class="text-center">
                             {if $room.id_order}
@@ -294,7 +290,7 @@
                             {/if}
                         </td>
                         {/if}
-                        <td>{if $room.guest_name}{$room.guest_name|escape:'html':'UTF-8'}{else}&mdash;{/if}</td>
+                        <td>{if $room.guest_name}<a href="{$customer_link}&id_customer={$room.id_customer|intval}&updatecustomer" target="_blank">{$room.guest_name|escape:'html':'UTF-8'}</a>{else}&mdash;{/if}</td>
                         <td>{if $room.date_to}{$room.date_to|escape:'html':'UTF-8'}{else}&mdash;{/if}</td>
                     </tr>
                     {/foreach}
@@ -384,8 +380,8 @@
                 {if $roomTypePerformance_rows}
                     {foreach $roomTypePerformance_rows as $perfRow}
                     <tr>
-                        <td>{$perfRow.room_type_name|escape:'html':'UTF-8'}</td>
-                        <td>{$perfRow.hotel_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$room_type_link}&id_product={$perfRow.id_product|intval}&updateproduct" target="_blank">{$perfRow.room_type_name|escape:'html':'UTF-8'}</a></td>
+                        <td><a href="{$hotel_link}&id={$perfRow.id_hotel|intval}&updatehtl_branch_info" target="_blank">{$perfRow.hotel_name|escape:'html':'UTF-8'}</a></td>
                         <td class="text-center">{$perfRow.total_rooms|intval}</td>
                         <td class="text-center">{$perfRow.total_nights_available|intval}</td>
                         <td class="text-center">{$perfRow.room_nights|intval}</td>

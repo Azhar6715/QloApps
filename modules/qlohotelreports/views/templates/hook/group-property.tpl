@@ -29,7 +29,7 @@
     <input type="hidden" name="tab" value="{$active_report|escape:'html':'UTF-8'}">
     {if isset($smarty.get.token)}<input type="hidden" name="token" value="{$smarty.get.token|escape:'html':'UTF-8'}">{/if}
     <div class="list_filters">
-        {if $hotels|count > 1 && $active_report != 'hotel-comparison'}
+        {if $active_report != 'hotel-comparison'}
         <div class="row">
             <label class="col-xs-3">{l s='Hotel' mod='qlohotelreports'}</label>
             <div class="col-xs-9">
@@ -56,7 +56,6 @@
                 </select>
             </div>
         </div>
-        {if $available_floors}
         <div class="row">
             <label class="col-xs-3">{l s='Floor' mod='qlohotelreports'}</label>
             <div class="col-xs-9">
@@ -68,7 +67,6 @@
                 </select>
             </div>
         </div>
-        {/if}
         {/if}
         {if $active_report != 'hotel-comparison'}
         <div class="actions">
@@ -171,7 +169,7 @@
                 {if $hotel_rows}
                     {foreach $hotel_rows as $hotelRow}
                     <tr>
-                        <td>{$hotelRow.hotel_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$hotel_link}&id={$hotelRow.id_hotel|intval}&updatehtl_branch_info" target="_blank">{$hotelRow.hotel_name|escape:'html':'UTF-8'}</a></td>
                         <td class="text-center">{$hotelRow.total_rooms|intval}</td>
                         <td class="text-center">{$hotelRow.rooms_sold|intval}</td>
                         <td class="text-center">{$hotelRow.occupancy|string_format:'%.1f'}%</td>
@@ -232,7 +230,7 @@
                     <tr>
                         <td>{$outOfOrderRow.room_num|escape:'html':'UTF-8'}</td>
                         <td>{if $outOfOrderRow.floor}{$outOfOrderRow.floor|escape:'html':'UTF-8'}{else}&mdash;{/if}</td>
-                        <td>{$outOfOrderRow.room_type_name|escape:'html':'UTF-8'}</td>
+                        <td><a href="{$room_type_link}&id_product={$outOfOrderRow.id_room_type|intval}&updateproduct" target="_blank">{$outOfOrderRow.room_type_name|escape:'html':'UTF-8'}</a></td>
                         <td class="text-center">
                             {if isset($room_statuses[$outOfOrderRow.id_status])}
                                 <span class="label {$room_statuses[$outOfOrderRow.id_status].class|escape:'html':'UTF-8'}">{$room_statuses[$outOfOrderRow.id_status].label|escape:'html':'UTF-8'}</span>

@@ -685,7 +685,7 @@ class ServiceProductOrderDetail extends ObjectModel
 
         return Db::getInstance()->executeS(
             'SELECT spod.`id_service_product_order_detail`, spod.`date_add`,
-            o.`id_order`, o.`reference`,
+            o.`id_order`, o.`reference`, o.`id_customer`,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS customer_name,
             spod.`name` AS service_name,
             IFNULL(cl.`name`, "") AS service_category,
@@ -825,7 +825,7 @@ class ServiceProductOrderDetail extends ObjectModel
         }
 
         return Db::getInstance()->executeS(
-            'SELECT hbd.`id_order`, o.`reference`,
+            'SELECT hbd.`id_order`, o.`reference`, hbd.`id_customer`, spod.`id_product`,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS customer_name,
             spod.`name` AS room_type_name, hbd.`room_num`, spod.`date_add`,
             spod.`total_price_tax_excl` / o.`conversion_rate` AS taxable_amount,

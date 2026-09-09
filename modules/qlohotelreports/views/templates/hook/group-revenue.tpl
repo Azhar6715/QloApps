@@ -31,7 +31,6 @@
         <input type="hidden" name="tab" value="{$active_report|escape:'html':'UTF-8'}">
         {if isset($smarty.get.token)}<input type="hidden" name="token" value="{$smarty.get.token|escape:'html':'UTF-8'}">{/if}
         <div class="list_filters">
-            {if $hotels|count > 1}
             <div class="row">
                 <label class="col-xs-3">{l s='Hotel' mod='qlohotelreports'}</label>
                 <div class="col-xs-9">
@@ -43,7 +42,6 @@
                     </select>
                 </div>
             </div>
-            {/if}
             <div class="row">
                 <label class="col-xs-3">{l s='Room Type' mod='qlohotelreports'}</label>
                 <div class="col-xs-9">
@@ -72,7 +70,7 @@
                 </div>
             </div>
             {/if}
-            {if $active_report == 'payment' && $payment_methods}
+            {if $active_report == 'payment'}
             <div class="row">
                 <label class="col-xs-3">{l s='Payment Method' mod='qlohotelreports'}</label>
                 <div class="col-xs-9">
@@ -217,8 +215,8 @@
                             <tr>
                                 <td>{if $refund.cancellation_date}{$refund.cancellation_date|date_format:'%d-%m-%Y'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td>{$refund.id_order_return|intval}</td>
-                                <td>{$refund.id_order|intval}</td>
-                                <td>{$refund.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$refund.id_order|intval}&vieworder" target="_blank">{$refund.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$refund.id_customer|intval}&updatecustomer" target="_blank">{$refund.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td class="text-right">{displayPrice price=$refund.total_price_tax_incl currency=$refund.id_currency}</td>
                                 <td class="text-right">{displayPrice price=$refund.refunded_amount currency=$refund.id_currency}</td>
                                 <td>{if $refund.refund_method}{$refund.refund_method|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
@@ -278,9 +276,9 @@
                             <tr>
                                 <td>{$payment.date_add|escape:'html':'UTF-8'}</td>
                                 <td>{$payment.id_order_payment|intval}</td>
-                                <td>{$payment.id_order|intval}</td>
+                                <td><a href="{$order_link}&id_order={$payment.id_order|intval}&vieworder" target="_blank">{$payment.id_order|intval}</a></td>
                                 <td>{$payment.reference|escape:'html':'UTF-8'}</td>
-                                <td>{$payment.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$customer_link}&id_customer={$payment.id_customer|intval}&updatecustomer" target="_blank">{$payment.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{$payment.payment_method|escape:'html':'UTF-8'}</td>
                                 <td>
                                     {if isset($payment_types[$payment.payment_type])}{$payment_types[$payment.payment_type]|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}
@@ -341,9 +339,9 @@
                             <tr>
                                 <td>{$taxRow.date_add|date_format:'%d-%m-%Y'}</td>
                                 <td>{$taxRow.reference|escape:'html':'UTF-8'}</td>
-                                <td>{$taxRow.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$customer_link}&id_customer={$taxRow.id_customer|intval}&updatecustomer" target="_blank">{$taxRow.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{if $taxRow.revenue_source == 'service'}{l s='Service Charge' mod='qlohotelreports'}{else}{l s='Room Charge' mod='qlohotelreports'}{/if}</td>
-                                <td>{$taxRow.room_type_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{if $taxRow.revenue_source == 'service'}{$service_link}{else}{$room_type_link}{/if}&id_product={$taxRow.id_product|intval}&updateproduct" target="_blank">{$taxRow.room_type_name|escape:'html':'UTF-8'}</a></td>
                                 <td class="text-right">{displayPrice price=$taxRow.taxable_amount currency=$id_currency}</td>
                                 <td>{if $taxRow.tax_name}{$taxRow.tax_name|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td class="text-right">{$taxRow.tax_rate|string_format:"%.2f"}%</td>
@@ -437,8 +435,8 @@
                     {if $outstanding}
                         {foreach $outstanding as $outstandingRow}
                             <tr>
-                                <td>{$outstandingRow.id_order|intval}</td>
-                                <td>{$outstandingRow.customer_name|escape:'html':'UTF-8'}</td>
+                                <td><a href="{$order_link}&id_order={$outstandingRow.id_order|intval}&vieworder" target="_blank">{$outstandingRow.id_order|intval}</a></td>
+                                <td><a href="{$customer_link}&id_customer={$outstandingRow.id_customer|intval}&updatecustomer" target="_blank">{$outstandingRow.customer_name|escape:'html':'UTF-8'}</a></td>
                                 <td>{if $outstandingRow.email}{$outstandingRow.email|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td>{if $outstandingRow.phone}{$outstandingRow.phone|escape:'html':'UTF-8'}{else}<span class="text-muted">—</span>{/if}</td>
                                 <td class="text-right">{displayPrice price=$outstandingRow.total_charges currency=$id_currency}</td>

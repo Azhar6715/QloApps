@@ -4395,7 +4395,7 @@ class HotelBookingDetail extends ObjectModel
         }
 
         $roomQuery =
-            'SELECT hbd.`id_order`, o.`reference`,
+            'SELECT hbd.`id_order`, o.`reference`, hbd.`id_customer`, hbd.`id_product`,
             CONCAT(c.`firstname`, " ", c.`lastname`) AS customer_name,
             hbd.`room_type_name`, hbd.`room_num`, hbd.`date_add`,
             hbd.`total_price_tax_excl` / o.`conversion_rate` AS taxable_amount,
