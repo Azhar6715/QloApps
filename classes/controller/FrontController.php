@@ -660,42 +660,11 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Renders and outputs maintenance page and ends controller process.
+     * Redirects a cursed request (e.g. an invalid/expired access token) to page not found and ends controller process.
      */
     public function initCursedPage()
     {
-        header('HTTP/1.1 404 Not Found');
-        header('Status: 404 Not Found');
-
-        $this->setMedia();
-        $this->initHeader();
-
-        if (!$this->useMobileTheme()) {
-            $this->context->smarty->assign(array(
-                'HOOK_HEADER'       => Hook::exec('displayHeader'),
-                'HOOK_TOP'          => Hook::exec('displayTop'),
-                'show_breadcrump'   => $this->show_breadcrump,
-            ));
-        } else {
-            $this->context->smarty->assign('HOOK_MOBILE_HEADER', Hook::exec('displayMobileHeader'));
-        }
-
-        $this->initFooter();
-
-        $this->context->smarty->assign(array(
-            'css_files'      => $this->css_files,
-            'js_files'       => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
-            'js_defer'       => (bool)Configuration::get('PS_JS_DEFER'),
-            'display_header' => $this->display_header,
-            'display_footer' => $this->display_footer,
-        ));
-
-        $this->context->smarty->assign('page_name', 'pagenotfound');
-
-        $front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
-        $template = $this->context->smarty->fetch($front_controller->getTemplatePath($this->getThemeDir().'404.tpl'));
-        $this->context->smarty->assign('template', $template);
-        $this->layout = $this->getLayout();
+        Tools::redirect($this->context->link->getPageLink('pagenotfound'));
     }
 
     /**
